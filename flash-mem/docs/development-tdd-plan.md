@@ -1,9 +1,9 @@
 # Flash Mem Development Plan (Git-Flow + TDD)
 
 ## Branch Strategy
-- `master`: production-ready releases only.
-- `develop`: integration branch.
-- `codex/feature/*`: feature branches from `develop`.
+- `codex/main`: production-ready releases only.
+- `codex/develop`: integration branch.
+- `codex/feature/*`: feature branches from `codex/develop`.
 - Current branch: `codex/feature/flash-mem-mvp`.
 
 ## Build Setup

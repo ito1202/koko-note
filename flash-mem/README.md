@@ -22,10 +22,10 @@ dotnet run --project src/FlashMem.Desktop/FlashMem.Desktop.csproj
 ```
 
 ## Git-Flow
-1. branch from `develop`: `codex/feature/<scope>`
+1. branch from `codex/develop`: `codex/feature/<scope>`
 2. implement with TDD in small commits
-3. merge feature -> `develop` after tests pass
-4. release branch from `develop` when preparing production
+3. merge feature -> `codex/develop` after tests pass
+4. promote `codex/develop` -> `codex/main` for release
 
 ## Architecture
 - `src/FlashMem.Domain`: memo state and input rules
