@@ -1,3 +1,4 @@
+using FlashMem.Application.Configuration;
 using FlashMem.Domain.Input;
 using SharpHook;
 using SharpHook.Data;
@@ -5,15 +6,17 @@ using SharpHook.Providers;
 
 namespace FlashMem.Desktop.Services;
 
-public sealed class CtrlDoubleTapGlobalHotkeyService : IGlobalHotkeyService
+public sealed class ModifierDoubleTapGlobalHotkeyService : IGlobalHotkeyService
 {
     private readonly DoubleTapHotkeyDetector _detector;
+    private readonly GlobalHotkeyOptions _options;
     private readonly IGlobalHook _hook;
     private Task? _hookTask;
 
-    public CtrlDoubleTapGlobalHotkeyService(DoubleTapHotkeyDetector detector)
+    public ModifierDoubleTapGlobalHotkeyService(GlobalHotkeyOptions options)
     {
-        _detector = detector;
+        _options = options;
+        _detector = new DoubleTapHotkeyDetector(options.DoubleTapWindow);
         UioHookProvider.Instance.KeyTypedEnabled = false;
         _hook = new EventLoopGlobalHook();
         _hook.KeyPressed += HandleKeyPressed;
@@ -40,7 +43,7 @@ public sealed class CtrlDoubleTapGlobalHotkeyService : IGlobalHotkeyService
 
     private void HandleKeyPressed(object? sender, KeyboardHookEventArgs e)
     {
-        if (!IsControlKey(e.Data.KeyCode))
+        if (!IsTargetModifier(e.Data.KeyCode, _options.TapKey))
         {
             return;
         }
@@ -51,8 +54,15 @@ public sealed class CtrlDoubleTapGlobalHotkeyService : IGlobalHotkeyService
         }
     }
 
-    private static bool IsControlKey(KeyCode keyCode)
+    private static bool IsTargetModifier(KeyCode keyCode, HotkeyTapKey tapKey)
     {
-        return keyCode is KeyCode.VcLeftControl or KeyCode.VcRightControl;
+        return tapKey switch
+        {
+            HotkeyTapKey.Shift => keyCode is KeyCode.VcLeftShift or KeyCode.VcRightShift,
+            HotkeyTapKey.Control => keyCode is KeyCode.VcLeftControl or KeyCode.VcRightControl,
+            HotkeyTapKey.Alt => keyCode is KeyCode.VcLeftAlt or KeyCode.VcRightAlt,
+            HotkeyTapKey.Command => keyCode is KeyCode.VcLeftMeta or KeyCode.VcRightMeta,
+            _ => false,
+        };
     }
 }

@@ -23,10 +23,20 @@ dotnet run --project src/FlashMem.Desktop/FlashMem.Desktop.csproj
 
 ## Clibor-like Behavior
 - App starts as hidden popup process (no regular main window UX).
-- Press `Ctrl` twice quickly to toggle popup.
+- Default hotkey:
+  - macOS: `Shift` double-tap
+  - Windows: `Control` double-tap
+- Hotkey can be changed in `Settings`.
 - Popup appears at the mouse cursor's right-bottom position.
 - Popup is frameless (no close button/title bar), border-only style.
 - Clicking outside hides the popup.
+- Tray/menu-bar menu provides: `Open Memo`, `Settings`, `Exit`.
+
+## Supported Hotkey Keys
+- `Shift`
+- `Control`
+- `Alt` (`Option` on macOS)
+- `Command` (macOS) / `Meta` (platform key code)
 
 ## macOS Permission Note
 - Global hotkey detection uses a global keyboard hook.
