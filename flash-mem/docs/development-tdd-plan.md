@@ -34,16 +34,16 @@
   - archive button
   - up/down keyboard selection
   - hide on deactivation (outside focus click)
+  - global `Ctrl` double-tap trigger (SharpHook)
+  - popup position at cursor right-bottom with screen-edge clamp
+  - border-only frameless popup (no close button)
 
 ## Current Gap vs memo-ui-state-spec
-- Global OS hotkey registration and tray integration are not yet implemented.
-- Cursor-right-bottom popup placement on global hotkey trigger is not yet implemented.
+- tray/menu-bar integration is not yet implemented.
 - Hotkey/settings UI persistence is not yet implemented.
 
 ## Next Iteration (Recommended)
-1. Add cross-platform hotkey adapter:
-   - macOS: event tap
-   - Windows: `RegisterHotKey`
-2. Add tray/menu bar service.
-3. Add settings store and UI for hotkey customization.
+1. Add tray/menu bar service.
+2. Add settings store and UI for hotkey customization.
+3. Store secure password in OS keychain/credential vault instead of env var fallback.
 4. Add integration tests for state transitions around popup show/hide.

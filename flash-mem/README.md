@@ -21,6 +21,17 @@ export FLASH_MEM_PASSWORD="set-a-strong-password"
 dotnet run --project src/FlashMem.Desktop/FlashMem.Desktop.csproj
 ```
 
+## Clibor-like Behavior
+- App starts as hidden popup process (no regular main window UX).
+- Press `Ctrl` twice quickly to toggle popup.
+- Popup appears at the mouse cursor's right-bottom position.
+- Popup is frameless (no close button/title bar), border-only style.
+- Clicking outside hides the popup.
+
+## macOS Permission Note
+- Global hotkey detection uses a global keyboard hook.
+- On first run, macOS may require **Input Monitoring** permission for the app/terminal.
+
 ## Git-Flow
 1. branch from `codex/develop`: `codex/feature/<scope>`
 2. implement with TDD in small commits

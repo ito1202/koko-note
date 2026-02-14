@@ -8,48 +8,65 @@
         d:DesignHeight="620"
         x:Class="FlashMem.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Flash Mem"
-        Width="960"
-        Height="620"
+        Width="920"
+        Height="560"
+        MinWidth="920"
+        MinHeight="560"
+        MaxWidth="920"
+        MaxHeight="560"
+        SystemDecorations="None"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        CanResize="False"
+        ShowInTaskbar="False"
+        Topmost="True"
+        TransparencyLevelHint="Blur"
+        Background="#00000000"
         KeyDown="OnWindowKeyDown">
-    <Grid ColumnDefinitions="300,*" Margin="12" ColumnSpacing="12">
-        <Border Grid.Column="0" Padding="8" Background="#111827" CornerRadius="8">
-            <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
-                <TextBlock Text="Memos" FontWeight="SemiBold" Foreground="#F9FAFB"/>
-                <Button Grid.Row="1" Content="Archive selected" HorizontalAlignment="Stretch" Click="OnArchiveClicked"/>
-                <ListBox Grid.Row="2"
-                         ItemsSource="{Binding Notes}"
-                         SelectedItem="{Binding SelectedNoteItem, Mode=TwoWay}"
-                         Background="#111827"
-                         BorderThickness="0">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate x:DataType="vm:NoteListItemViewModel">
-                            <Grid RowDefinitions="Auto,Auto" Margin="2">
-                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold"/>
-                                <TextBlock Grid.Row="1"
-                                           Text="{Binding UpdatedAtUtc, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}"
-                                           Opacity="0.65"
-                                           FontSize="11"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Grid>
-        </Border>
+    <Border Margin="8"
+            Padding="10"
+            CornerRadius="10"
+            BorderBrush="#334155"
+            BorderThickness="1"
+            Background="#F8FAFC">
+        <Grid ColumnDefinitions="290,*" ColumnSpacing="12">
+            <Border Grid.Column="0" Padding="8" Background="#111827" CornerRadius="8">
+                <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+                    <TextBlock Text="Memos" FontWeight="SemiBold" Foreground="#F9FAFB"/>
+                    <Button Grid.Row="1" Content="Archive selected" HorizontalAlignment="Stretch" Click="OnArchiveClicked"/>
+                    <ListBox Grid.Row="2"
+                             ItemsSource="{Binding Notes}"
+                             SelectedItem="{Binding SelectedNoteItem, Mode=TwoWay}"
+                             Background="#111827"
+                             BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:NoteListItemViewModel">
+                                <Grid RowDefinitions="Auto,Auto" Margin="2">
+                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Row="1"
+                                               Text="{Binding UpdatedAtUtc, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}"
+                                               Opacity="0.65"
+                                               FontSize="11"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
 
-        <Border Grid.Column="1" Padding="8" Background="#F9FAFB" CornerRadius="8">
-            <Grid RowDefinitions="Auto,*" RowSpacing="8">
-                <TextBox Grid.Row="0"
-                         Watermark="Title"
-                         Text="{Binding NoteTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="1"
-                         Watermark="Content"
-                         Text="{Binding NoteContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         TextWrapping="Wrap"
-                         AcceptsReturn="True"
-                         VerticalAlignment="Stretch"/>
-            </Grid>
-        </Border>
-    </Grid>
+            <Border Grid.Column="1" Padding="8" Background="#F9FAFB" CornerRadius="8">
+                <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                    <TextBox Grid.Row="0"
+                             Watermark="Title"
+                             Text="{Binding NoteTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Row="1"
+                             Watermark="Content"
+                             Text="{Binding NoteContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalAlignment="Stretch"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
 </Window>
