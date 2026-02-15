@@ -28,9 +28,15 @@ dotnet run --project src/FlashMem.Desktop/FlashMem.Desktop.csproj
   - Windows: `Control` double-tap
 - Hotkey can be changed in `Settings`.
 - Popup appears at the mouse cursor's right-bottom position.
+- When popup is already visible and hotkey is pressed, popup is re-positioned to current cursor.
 - Popup is frameless (no close button/title bar), border-only style.
 - Clicking outside hides the popup.
 - Tray/menu-bar menu provides: `Open Memo`, `Settings`, `Exit`.
+- Memo operations:
+  - `New` create memo
+  - `Delete` remove selected memo
+  - `Save` persist immediately
+  - auto-save on edit (debounced)
 
 ## Supported Hotkey Keys
 - `Shift`

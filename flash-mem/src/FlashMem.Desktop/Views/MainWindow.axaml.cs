@@ -20,6 +20,30 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void OnNewClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            await viewModel.CreateNoteAsync();
+        }
+    }
+
+    private async void OnDeleteClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            await viewModel.DeleteSelectedAsync();
+        }
+    }
+
+    private async void OnSaveClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            await viewModel.SaveNowAsync();
+        }
+    }
+
     private void OnWindowKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel viewModel)
@@ -37,6 +61,13 @@ public partial class MainWindow : Window
         if (e.Key == Key.Down)
         {
             viewModel.MoveSelectionDown();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && e.Key == Key.S)
+        {
+            _ = viewModel.SaveNowAsync();
             e.Handled = true;
         }
     }

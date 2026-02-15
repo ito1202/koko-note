@@ -47,11 +47,14 @@
 | 現在状態 | イベント | 次状態 | 動作 |
 |---|---|---|---|
 | ResidentHidden | ホットキー押下 | PopupVisible | マウスカーソル右下に表示し、先頭メモを表示 |
-| PopupVisible | ホットキー押下 | ResidentHidden | ポップアップを非表示 |
+| PopupVisible | ホットキー押下 | PopupVisible | 現在のマウスカーソル右下に再配置して再描画 |
 | PopupVisible | 外側クリック | ResidentHidden | 非表示して常駐へ戻る |
 | PopupVisible | メモ行クリック | PopupVisible | 選択メモを切り替え、詳細ペイン更新 |
 | PopupVisible | `↑/↓` キー | PopupVisible | 前後メモへ選択移動、詳細ペイン更新 |
 | PopupVisible | アーカイブ押下 | PopupVisible | 該当メモをArchivedに変更し一覧から除外 |
+| PopupVisible | 新規メモ押下 | PopupVisible | 新規メモを作成して選択 |
+| PopupVisible | 削除メモ押下 | PopupVisible | 選択メモを削除し、次メモを選択 |
+| PopupVisible | 保存押下 | PopupVisible | 暗号化保存を即時実行 |
 | 任意 | 保存トリガー | Saving | 暗号化保存（成功後は元状態へ戻る） |
 | PopupVisible | 一定時間操作なし | Locked | 復号鍵をメモリ破棄しロック |
 | Locked | 認証成功 | PopupVisible | 復号して編集再開 |
@@ -80,6 +83,14 @@
   - `メモ詳細ペイン` は常時表示。
   - タイトル欄 + 本文欄が欠けない最小サイズを維持する。
 - 表示中に他アプリ側をクリックした場合は非表示に遷移する。
+
+### 5.1 Clibor準拠スタイル（参照値）
+- 文字色: `#333333`
+- 背景色: `#FBF7EF`
+- 選択行背景色: `#F9EBCE`
+- 選択行文字色: `#333333`
+- 枠線色: `#CBCBCB`
+- 枠線太さ: `1px`
 
 ## 6. エラー時挙動
 | ケース | ユーザー表示 | システム動作 |

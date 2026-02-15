@@ -43,6 +43,25 @@ public partial class MainWindowViewModel : ViewModelBase
         await PersistAsync();
     }
 
+    public async Task CreateNoteAsync()
+    {
+        _editorService.CreateNote(DateTimeOffset.UtcNow);
+        ReloadFromDomain();
+        await PersistImmediatelyAsync();
+    }
+
+    public async Task DeleteSelectedAsync()
+    {
+        _editorService.DeleteSelected();
+        ReloadFromDomain();
+        await PersistImmediatelyAsync();
+    }
+
+    public Task SaveNowAsync()
+    {
+        return PersistImmediatelyAsync();
+    }
+
     public void MoveSelectionUp()
     {
         _editorService.MoveSelectionUp();
@@ -126,5 +145,11 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         await _noteStore.SaveAsync(_editorService.Workspace, _password);
+    }
+
+    private Task PersistImmediatelyAsync()
+    {
+        Interlocked.Increment(ref _saveVersion);
+        return _noteStore.SaveAsync(_editorService.Workspace, _password);
     }
 }

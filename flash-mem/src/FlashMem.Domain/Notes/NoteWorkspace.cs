@@ -79,6 +79,38 @@ public sealed class NoteWorkspace
         return true;
     }
 
+    public void CreateNote(DateTimeOffset nowUtc)
+    {
+        var note = new Note(
+            Id: NoteId.New(),
+            Title: "New Memo",
+            Content: string.Empty,
+            UpdatedAtUtc: nowUtc,
+            IsArchived: false);
+        _notes.Insert(0, note);
+        _selectedNoteId = note.Id;
+    }
+
+    public bool DeleteSelected()
+    {
+        if (_notes.Count <= 1)
+        {
+            _notes[0] = _notes[0].Update("New Memo", string.Empty, DateTimeOffset.UtcNow);
+            _selectedNoteId = _notes[0].Id;
+            return false;
+        }
+
+        var index = _notes.FindIndex(x => x.Id == _selectedNoteId);
+        if (index < 0)
+        {
+            return false;
+        }
+
+        _notes.RemoveAt(index);
+        _selectedNoteId = ResolveInitialSelection(null);
+        return true;
+    }
+
     public void UpdateSelected(string title, string content, DateTimeOffset nowUtc)
     {
         var index = _notes.FindIndex(x => x.Id == _selectedNoteId);

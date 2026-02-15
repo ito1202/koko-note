@@ -3,6 +3,7 @@
 ## Stage 1: Core Popup Memo (Done)
 - [x] Frameless popup UI (no close button)
 - [x] Memo list pane + detail pane
+- [x] New/Delete/Save memo commands
 - [x] Archive action
 - [x] Arrow key navigation
 - [x] Hide on focus loss
@@ -15,6 +16,7 @@
 
 ## Stage 3: Resident Operation (Done)
 - [x] Global double-tap hotkey
+- [x] Reposition-and-redraw on hotkey while popup already visible
 - [x] Startup hidden (resident style)
 - [x] Tray/menu-bar menu:
   - [x] Open Memo

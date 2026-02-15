@@ -121,12 +121,6 @@ public partial class App : Avalonia.Application
             return;
         }
 
-        if (_mainWindow.IsVisible)
-        {
-            _mainWindow.Hide();
-            return;
-        }
-
         ShowPopupAtCursor();
     }
 
