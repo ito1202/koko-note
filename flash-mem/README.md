@@ -21,6 +21,11 @@ export FLASH_MEM_PASSWORD="set-a-strong-password"
 dotnet run --project src/FlashMem.Desktop/FlashMem.Desktop.csproj
 ```
 
+If decryption fails because password doesn't match existing encrypted notes:
+- the original `notes.enc.json` is preserved
+- app starts with a new recovery store file (`notes.recovery-*.enc.json`)
+- set `FLASH_MEM_PASSWORD` back to the original password to reopen old notes
+
 ## Clibor-like Behavior
 - App starts as hidden popup process (no regular main window UX).
 - Default hotkey:

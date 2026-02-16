@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -11,6 +12,7 @@ using FlashMem.Application.UI;
 using FlashMem.Desktop.Services;
 using FlashMem.Desktop.ViewModels;
 using FlashMem.Desktop.Views;
+using FlashMem.Domain.Notes;
 using FlashMem.Infrastructure.Configuration;
 using FlashMem.Infrastructure.Persistence;
 using FlashMem.Infrastructure.Security;
@@ -20,6 +22,7 @@ namespace FlashMem.Desktop;
 
 public partial class App : Avalonia.Application
 {
+    private const string LegacyDevPassword = "flash-mem-dev-only-change-this";
     private readonly bool _isMacOs = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
     private IClassicDesktopStyleApplicationLifetime? _desktopLifetime;
     private MainWindow? _mainWindow;
@@ -50,36 +53,44 @@ public partial class App : Avalonia.Application
 
     private async void OnDesktopStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
     {
-        var appDataPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "FlashMem");
-        Directory.CreateDirectory(appDataPath);
-
-        _settingsStore = new JsonAppSettingsStore(Path.Combine(appDataPath, "settings.json"));
-        _autoStartService = new DesktopAutoStartService();
-        _settings = await _settingsStore.LoadAsync(_isMacOs);
-        await _autoStartService.SetEnabledAsync(_settings.StartAtLoginEnabled);
-
-        var noteStorePath = Path.Combine(appDataPath, "notes.enc.json");
-        var password = ResolveEncryptionPassword();
-        var noteStore = new EncryptedNoteStore(noteStorePath, new AesGcmArgon2Encryptor());
-        var workspace = await noteStore.LoadAsync(password);
-        var editorService = new FlashMemAppNotes.NoteEditorService(workspace);
-        var mainViewModel = new MainWindowViewModel(editorService, noteStore, password);
-
-        _cursorPositionProvider = new CursorPositionProvider();
-        _mainWindow = new MainWindow
+        try
         {
-            DataContext = mainViewModel,
-        };
+            var appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "FlashMem");
+            Directory.CreateDirectory(appDataPath);
 
-        if (_desktopLifetime is not null)
-        {
-            _desktopLifetime.MainWindow = _mainWindow;
+            _settingsStore = new JsonAppSettingsStore(Path.Combine(appDataPath, "settings.json"));
+            _autoStartService = new DesktopAutoStartService();
+            _settings = await _settingsStore.LoadAsync(_isMacOs);
+            await _autoStartService.SetEnabledAsync(_settings.StartAtLoginEnabled);
+
+            var noteStorePath = Path.Combine(appDataPath, "notes.enc.json");
+            var password = ResolveEncryptionPassword();
+            var encryptor = new AesGcmArgon2Encryptor();
+            var load = await LoadWorkspaceWithRecoveryAsync(noteStorePath, encryptor, password);
+            var editorService = new FlashMemAppNotes.NoteEditorService(load.Workspace);
+            var mainViewModel = new MainWindowViewModel(editorService, load.NoteStore, password);
+
+            _cursorPositionProvider = new CursorPositionProvider();
+            _mainWindow = new MainWindow
+            {
+                DataContext = mainViewModel,
+            };
+
+            if (_desktopLifetime is not null)
+            {
+                _desktopLifetime.MainWindow = _mainWindow;
+            }
+
+            await RestartHotkeyServiceAsync();
+            _mainWindow.Hide();
         }
-
-        await RestartHotkeyServiceAsync();
-        _mainWindow.Hide();
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[flash-mem] startup failed: {ex}");
+            _desktopLifetime?.Shutdown(-1);
+        }
     }
 
     private void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
@@ -95,7 +106,52 @@ public partial class App : Avalonia.Application
             return password;
         }
 
-        return "flash-mem-dev-only-change-this";
+        return LegacyDevPassword;
+    }
+
+    private static async Task<WorkspaceLoadResult> LoadWorkspaceWithRecoveryAsync(
+        string noteStorePath,
+        IEncryptor encryptor,
+        string requestedPassword)
+    {
+        var primaryStore = new EncryptedNoteStore(noteStorePath, encryptor);
+        try
+        {
+            var workspace = await primaryStore.LoadAsync(requestedPassword);
+            return new WorkspaceLoadResult(workspace, primaryStore);
+        }
+        catch (AuthenticationTagMismatchException) when (!string.Equals(requestedPassword, LegacyDevPassword, StringComparison.Ordinal))
+        {
+            var legacyStore = new EncryptedNoteStore(noteStorePath, encryptor);
+            try
+            {
+                var workspace = await legacyStore.LoadAsync(LegacyDevPassword);
+                await primaryStore.SaveAsync(workspace, requestedPassword);
+                Console.Error.WriteLine("[flash-mem] note store password was migrated to FLASH_MEM_PASSWORD.");
+                return new WorkspaceLoadResult(workspace, primaryStore);
+            }
+            catch (AuthenticationTagMismatchException)
+            {
+                Console.Error.WriteLine("[flash-mem] note store decryption failed. Original file is preserved. Start with an empty store file.");
+                var fallbackPath = BuildFallbackStorePath(noteStorePath);
+                var fallbackStore = new EncryptedNoteStore(fallbackPath, encryptor);
+                return new WorkspaceLoadResult(new NoteWorkspace(Array.Empty<Note>()), fallbackStore);
+            }
+        }
+        catch (AuthenticationTagMismatchException)
+        {
+            Console.Error.WriteLine("[flash-mem] note store decryption failed. Original file is preserved. Start with an empty store file.");
+            var fallbackPath = BuildFallbackStorePath(noteStorePath);
+            var fallbackStore = new EncryptedNoteStore(fallbackPath, encryptor);
+            return new WorkspaceLoadResult(new NoteWorkspace(Array.Empty<Note>()), fallbackStore);
+        }
+    }
+
+    private static string BuildFallbackStorePath(string noteStorePath)
+    {
+        var directory = Path.GetDirectoryName(noteStorePath) ?? ".";
+        var timestamp = DateTimeOffset.UtcNow.ToString("yyyyMMddHHmmss");
+        return Path.Combine(directory, $"notes.recovery-{timestamp}.enc.json");
     }
 
     private async Task RestartHotkeyServiceAsync()
@@ -201,4 +257,6 @@ public partial class App : Avalonia.Application
     {
         _desktopLifetime?.Shutdown();
     }
+
+    private sealed record WorkspaceLoadResult(NoteWorkspace Workspace, EncryptedNoteStore NoteStore);
 }
