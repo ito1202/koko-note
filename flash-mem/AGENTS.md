@@ -1,5 +1,13 @@
 # Repository Agent Rules
 
+## Skills In Use
+- `skill-creator` (system): `/Users/serpent/.codex/skills/.system/skill-creator/SKILL.md`
+  - Use when creating or updating a skill.
+- `skill-installer` (system): `/Users/serpent/.codex/skills/.system/skill-installer/SKILL.md`
+  - Use when listing/installing skills from curated sources or repositories.
+- `quality-gates` (custom): `/Users/serpent/.codex/skills/quality-gates/SKILL.md`
+  - Use for release-quality verification, required gate execution, and fail-fast reporting.
+
 ## Recurrence Prevention Workflow (Mandatory)
 - Before starting any development task, read and present relevant entries from `docs/fault-table/fault-table.md`.
 - During implementation, explicitly apply the listed prevention rules from the fault table.
