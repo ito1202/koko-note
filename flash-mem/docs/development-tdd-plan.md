@@ -1,9 +1,9 @@
 # Flash Mem Development Plan (Git-Flow + TDD)
 
 ## Branch Strategy
-- `master`: production-ready releases only.
-- `develop`: integration branch.
-- `codex/feature/*`: feature branches from `develop`.
+- `codex/main`: production-ready releases only.
+- `codex/develop`: integration branch.
+- `codex/feature/*`: feature branches from `codex/develop`.
 - Current branch: `codex/feature/flash-mem-mvp`.
 
 ## Build Setup
@@ -34,16 +34,18 @@
   - archive button
   - up/down keyboard selection
   - hide on deactivation (outside focus click)
+  - global configurable modifier double-tap trigger (SharpHook)
+  - popup position at cursor right-bottom with screen-edge clamp
+  - border-only frameless popup (no close button)
+  - tray/menu-bar controls: open, settings, exit
+  - settings window for hotkey key/time and startup toggle
+  - runtime settings persistence and hotkey reload
 
 ## Current Gap vs memo-ui-state-spec
-- Global OS hotkey registration and tray integration are not yet implemented.
-- Cursor-right-bottom popup placement on global hotkey trigger is not yet implemented.
-- Hotkey/settings UI persistence is not yet implemented.
+- secure password handling remains environment-variable based for local development.
+- Windows-side manual verification is still pending.
 
 ## Next Iteration (Recommended)
-1. Add cross-platform hotkey adapter:
-   - macOS: event tap
-   - Windows: `RegisterHotKey`
-2. Add tray/menu bar service.
-3. Add settings store and UI for hotkey customization.
-4. Add integration tests for state transitions around popup show/hide.
+1. Store secure password in OS keychain/credential vault instead of env var fallback.
+2. Add integration tests for popup/tray state transitions.
+3. Add packaging/signing pipeline for macOS and Windows installers.

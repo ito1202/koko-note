@@ -27,6 +27,18 @@ public sealed class NoteEditorServiceTests
         Assert.Equal("New Title", service.SelectedNote.Title);
         Assert.Equal("New Content", service.SelectedNote.Content);
     }
+
+    [Fact]
+    public void CreateNote_Adds_New_Selected_Note()
+    {
+        var workspace = new NoteWorkspace([NoteFactory.Create("A")]);
+        var service = new NoteEditorService(workspace);
+
+        service.CreateNote(DateTimeOffset.UtcNow);
+
+        Assert.Equal("New Memo", service.SelectedNote.Title);
+        Assert.Equal(2, service.VisibleNotes.Count);
+    }
 }
 
 file static class NoteFactory

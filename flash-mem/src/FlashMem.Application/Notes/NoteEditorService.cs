@@ -41,4 +41,14 @@ public sealed class NoteEditorService
     {
         _workspace.UpdateSelected(title, content, nowUtc);
     }
+
+    public void CreateNote(DateTimeOffset nowUtc)
+    {
+        _workspace.CreateNote(nowUtc);
+    }
+
+    public bool DeleteSelected()
+    {
+        return _workspace.DeleteSelected();
+    }
 }
