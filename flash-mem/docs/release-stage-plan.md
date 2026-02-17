@@ -42,5 +42,9 @@
 ## Release Checklist
 - [x] `dotnet build FlashMem.sln`
 - [x] `dotnet test FlashMem.sln`
-- [ ] Manual verification on macOS (input monitoring permission + tray behavior)
+- [x] Manual verification on macOS (input monitoring permission + tray behavior)
 - [ ] Manual verification on Windows 10/11 (tray + startup registration)
+
+## Validation Note
+- As of 2026-02-17, functional validation has been completed on macOS only.
+- Windows 10/11 verification remains pending and is required before production release.
