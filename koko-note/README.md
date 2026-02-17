@@ -1,6 +1,8 @@
-# Flash Mem
+# KO↑KO↓
 
 Hotkey-first resident memo app (Windows/macOS) based on the specification in `docs/memo-ui-state-spec.md`.
+
+This project is inspired by Clibor, the clipboard-management app that represents a practical conclusion for this interaction model.
 
 ## Prerequisites
 - .NET SDK 8.0.124
@@ -10,21 +12,21 @@ Hotkey-first resident memo app (Windows/macOS) based on the specification in `do
 ```bash
 export PATH="/opt/homebrew/opt/dotnet@8/bin:$PATH"
 export DOTNET_ROOT="/opt/homebrew/opt/dotnet@8/libexec"
-dotnet restore FlashMem.sln
-dotnet build FlashMem.sln
-dotnet test FlashMem.sln
+dotnet restore KokoNote.sln
+dotnet build KokoNote.sln
+dotnet test KokoNote.sln
 ```
 
 ## Run Desktop App
 ```bash
-export FLASH_MEM_PASSWORD="set-a-strong-password"
+export KOKO_NOTE_PASSWORD="set-a-strong-password"
 dotnet run --project src/FlashMem.Desktop/FlashMem.Desktop.csproj
 ```
 
 If decryption fails because password doesn't match existing encrypted notes:
 - the original `notes.enc.json` is preserved
 - app starts with a new recovery store file (`notes.recovery-*.enc.json`)
-- set `FLASH_MEM_PASSWORD` back to the original password to reopen old notes
+- set `KOKO_NOTE_PASSWORD` (or legacy `FLASH_MEM_PASSWORD`) back to the original password to reopen old notes
 
 ## Clibor-like Behavior
 - App starts as hidden popup process (no regular main window UX).

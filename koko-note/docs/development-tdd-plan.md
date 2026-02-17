@@ -1,22 +1,22 @@
-# Flash Mem Development Plan (Git-Flow + TDD)
+# KO↑KO↓ Development Plan (Git-Flow + TDD)
 
 ## Branch Strategy
 - `codex/main`: production-ready releases only.
 - `codex/develop`: integration branch.
 - `codex/feature/*`: feature branches from `codex/develop`.
-- Current branch: `codex/feature/flash-mem-mvp`.
+- Current branch: follow active feature branch (example: `codex/feature/clibor-popup-behavior`).
 
 ## Build Setup
 1. Install .NET 8 SDK (`dotnet@8`).
 2. Use pinned SDK from `global.json`.
 3. Restore and build:
-   - `dotnet restore FlashMem.sln`
-   - `dotnet build FlashMem.sln`
+   - `dotnet restore KokoNote.sln`
+   - `dotnet build KokoNote.sln`
 
 ## TDD Workflow
 1. Write failing tests in `tests/*`.
 2. Implement minimal code in `src/*`.
-3. Run `dotnet test FlashMem.sln`.
+3. Run `dotnet test KokoNote.sln`.
 4. Refactor without changing behavior.
 
 ## Implemented in This Iteration

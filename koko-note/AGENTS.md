@@ -21,7 +21,7 @@
 
 ## Quality Gates (Mandatory)
 - Before finishing any implementation task, run:
-  - `dotnet build FlashMem.sln`
-  - `dotnet test FlashMem.sln`
+  - `dotnet build KokoNote.sln`
+  - `dotnet test KokoNote.sln`
 - Do not mark task complete when build/test has errors.
 - If environment issues prevent running quality gates, report the blocker explicitly and stop.

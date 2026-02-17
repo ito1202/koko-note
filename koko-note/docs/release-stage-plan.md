@@ -1,4 +1,4 @@
-# Flash Mem Release Stage Plan
+# KO↑KO↓ Release Stage Plan
 
 ## Stage 1: Core Popup Memo (Done)
 - [x] Frameless popup UI (no close button)
@@ -40,8 +40,8 @@
   - [x] `Command` (Meta)
 
 ## Release Checklist
-- [x] `dotnet build FlashMem.sln`
-- [x] `dotnet test FlashMem.sln`
+- [x] `dotnet build KokoNote.sln`
+- [x] `dotnet test KokoNote.sln`
 - [x] Manual verification on macOS (input monitoring permission + tray behavior)
 - [ ] Manual verification on Windows 10/11 (tray + startup registration)
 

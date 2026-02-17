@@ -8,8 +8,8 @@ namespace FlashMem.Desktop.Services;
 public sealed class DesktopAutoStartService : IAutoStartService
 {
     private const string WindowsRunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string AppName = "FlashMem";
-    private const string MacLaunchAgentName = "com.flashmem.desktop";
+    private const string AppName = "koko-note";
+    private const string MacLaunchAgentName = "com.koko-note.desktop";
     private readonly string _macLaunchAgentPath;
 
     public DesktopAutoStartService()

@@ -9,7 +9,7 @@
         MaxHeight="270"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
-        Title="Flash Mem Settings">
+        Title="KO↑KO↓ Settings">
     <Grid Margin="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
         <TextBlock Text="Double Tap Key" FontWeight="SemiBold"/>
         <ComboBox x:Name="HotkeyCombo" Grid.Row="1"/>

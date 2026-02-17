@@ -23,6 +23,10 @@ namespace FlashMem.Desktop;
 public partial class App : Avalonia.Application
 {
     private const string LegacyDevPassword = "flash-mem-dev-only-change-this";
+    private const string NewPasswordEnvName = "KOKO_NOTE_PASSWORD";
+    private const string LegacyPasswordEnvName = "FLASH_MEM_PASSWORD";
+    private const string ProductDataDirectoryName = "koko-note";
+    private const string LegacyDataDirectoryName = "FlashMem";
     private readonly bool _isMacOs = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
     private IClassicDesktopStyleApplicationLifetime? _desktopLifetime;
     private MainWindow? _mainWindow;
@@ -55,9 +59,7 @@ public partial class App : Avalonia.Application
     {
         try
         {
-            var appDataPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "FlashMem");
+            var appDataPath = ResolveAppDataPath();
             Directory.CreateDirectory(appDataPath);
 
             _settingsStore = new JsonAppSettingsStore(Path.Combine(appDataPath, "settings.json"));
@@ -88,7 +90,7 @@ public partial class App : Avalonia.Application
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"[flash-mem] startup failed: {ex}");
+            Console.Error.WriteLine($"[koko-note] startup failed: {ex}");
             _desktopLifetime?.Shutdown(-1);
         }
     }
@@ -100,13 +102,37 @@ public partial class App : Avalonia.Application
 
     private static string ResolveEncryptionPassword()
     {
-        var password = Environment.GetEnvironmentVariable("FLASH_MEM_PASSWORD");
+        var password = Environment.GetEnvironmentVariable(NewPasswordEnvName);
+        if (!string.IsNullOrWhiteSpace(password))
+        {
+            return password;
+        }
+
+        password = Environment.GetEnvironmentVariable(LegacyPasswordEnvName);
         if (!string.IsNullOrWhiteSpace(password))
         {
             return password;
         }
 
         return LegacyDevPassword;
+    }
+
+    private static string ResolveAppDataPath()
+    {
+        var baseDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var newPath = Path.Combine(baseDirectory, ProductDataDirectoryName);
+        if (Directory.Exists(newPath))
+        {
+            return newPath;
+        }
+
+        var legacyPath = Path.Combine(baseDirectory, LegacyDataDirectoryName);
+        if (Directory.Exists(legacyPath))
+        {
+            return legacyPath;
+        }
+
+        return newPath;
     }
 
     private static async Task<WorkspaceLoadResult> LoadWorkspaceWithRecoveryAsync(
@@ -127,12 +153,12 @@ public partial class App : Avalonia.Application
             {
                 var workspace = await legacyStore.LoadAsync(LegacyDevPassword);
                 await primaryStore.SaveAsync(workspace, requestedPassword);
-                Console.Error.WriteLine("[flash-mem] note store password was migrated to FLASH_MEM_PASSWORD.");
+                Console.Error.WriteLine("[koko-note] note store password was migrated to runtime password.");
                 return new WorkspaceLoadResult(workspace, primaryStore);
             }
             catch (AuthenticationTagMismatchException)
             {
-                Console.Error.WriteLine("[flash-mem] note store decryption failed. Original file is preserved. Start with an empty store file.");
+                Console.Error.WriteLine("[koko-note] note store decryption failed. Original file is preserved. Start with an empty store file.");
                 var fallbackPath = BuildFallbackStorePath(noteStorePath);
                 var fallbackStore = new EncryptedNoteStore(fallbackPath, encryptor);
                 return new WorkspaceLoadResult(new NoteWorkspace(Array.Empty<Note>()), fallbackStore);
@@ -140,7 +166,7 @@ public partial class App : Avalonia.Application
         }
         catch (AuthenticationTagMismatchException)
         {
-            Console.Error.WriteLine("[flash-mem] note store decryption failed. Original file is preserved. Start with an empty store file.");
+            Console.Error.WriteLine("[koko-note] note store decryption failed. Original file is preserved. Start with an empty store file.");
             var fallbackPath = BuildFallbackStorePath(noteStorePath);
             var fallbackStore = new EncryptedNoteStore(fallbackPath, encryptor);
             return new WorkspaceLoadResult(new NoteWorkspace(Array.Empty<Note>()), fallbackStore);

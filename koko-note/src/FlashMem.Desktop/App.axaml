@@ -16,7 +16,7 @@
     <TrayIcon.Icons>
         <TrayIcons>
             <TrayIcon Icon="/Assets/avalonia-logo.ico"
-                      ToolTipText="Flash Mem"
+                      ToolTipText="KO↑KO↓"
                       IsVisible="True"
                       Clicked="OnTrayClicked">
                 <TrayIcon.Menu>
