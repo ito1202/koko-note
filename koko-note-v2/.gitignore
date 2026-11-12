@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+TestResults/
+artifacts/
+**/.build/
+**/.swiftpm/
+*.user
+*.db*
+*.bak

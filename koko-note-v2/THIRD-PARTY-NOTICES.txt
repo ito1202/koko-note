@@ -1,0 +1,26 @@
+KOKO Note 2.0 - third-party notices
+
+Runtime packages:
+
+Microsoft.Data.Sqlite / Microsoft.Data.Sqlite.Core 10.0.15
+Copyright (c) .NET Foundation and Contributors. All rights reserved.
+MIT license: licenses/Microsoft-MIT.txt
+Source: https://github.com/dotnet/efcore
+
+SQLitePCLRaw core / bundle_e_sqlite3 / provider.e_sqlite3 / lib.e_sqlite3 2.1.13
+Eric Sink and contributors
+Apache License 2.0: licenses/Apache-2.0.txt
+Source: https://github.com/ericsink/SQLitePCL.raw
+
+SQLite engine (included by SQLitePCLRaw.lib.e_sqlite3)
+Public domain: https://sqlite.org/copyright.html
+Source: https://sqlite.org/src
+
+.NET Windows x64 app host
+Copyright (c) .NET Foundation and Contributors.
+MIT license (same terms): licenses/Microsoft-MIT.txt
+Source: https://github.com/dotnet/runtime
+
+The .NET Windows Desktop Runtime is installed separately, not bundled.
+Test-only dependencies and their licenses are listed in docs/decisions.md.
+No third-party library sources have been modified.
